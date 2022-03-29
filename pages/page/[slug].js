@@ -1,5 +1,5 @@
 import Layout from '../../components/layout'
-import { getAllPostIds, getCustomFieldData, getPostData } from '../../lib/posts'
+import { getAllPostSlugs, getCustomFieldData, getPostData } from '../../lib/posts'
 import Head from 'next/head'
 import utilStyles from '../../styles/utils.module.css'
 
@@ -30,7 +30,7 @@ export default function Post({ postData }) {
   }
 
 export async function getStaticPaths() {
-    const paths = await getAllPostIds()
+    const paths = await getAllPostSlugs()
     console.log('拝見');
     console.log(paths);
     return {
@@ -42,9 +42,11 @@ export async function getStaticPaths() {
   export async function getStaticProps({ params }) {
     // console.log("params");
     // console.log(params);
-    const basicData = await getPostData(params.id);
-    const customFieldData = await getCustomFieldData(params.id);
-    const postData = {...basicData, ...customFieldData};
+    const basicData = await getPostData(params.slug);
+    const customFieldData = await getCustomFieldData(params.slug);
+    const postData = await {...basicData, ...customFieldData};
+    // await console.log('postDataをチェック');
+    // await console.log(postData);
     return {
       props: {
         postData
